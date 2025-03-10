@@ -1,16 +1,32 @@
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useLoginUserMutation } from '../redux/features/auth/authApi';
 
 
 const Login = () => {
     const [message, setMessage] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('')
+    
+    const dispatch = useDispatch();
+    const [loginUser, {isLoading: loginLoading}] = useLoginUserMutation()
+    const navigate = useNavigate();
+    
+    
     const handleLogin = async (e) =>{
         e.preventDefault();
         const data ={
             email,
             password
+        }
+        try {
+            const response = await loginUser(data).unwrap();           
+            alert("Login succesfull")
+            navigate("/")
+        } catch (error) {
+            setMessage("please provide a valid email and password");
         }
     
     }
@@ -29,7 +45,7 @@ const Login = () => {
                 placeholder='Password' required className='w-full bg-gray-100 focus:outline-none px-5 py-3'  
                 />
                 {
-                    message && <p className='text-red-500'>{mssage}</p>
+                    message && <p className='text-red-500'>{message}</p>
 
                 }
                 <button type='submit'
