@@ -9,6 +9,7 @@ const authApi = createApi({
         baseUrl: `${getBaseUrl()}/api/auth/`,
         credentials: "include",
     }),
+    tagTypes: ["User"],
 
 
     endpoints: (builder) => ({
@@ -26,38 +27,48 @@ const authApi = createApi({
                 body: credentials,
             }),
         }),
-        logout: builder.mutation({
+        logoutUser: builder.mutation({
             query: () => ({
                 url: "/logout",
                 method: "POST",
+                //body: credentials,
             }),
         }),
         editProfile: builder.mutation({
-            query: (user) => ({
+            query: (profileData) => ({
                 url: "/edit-profile",
                 method: "PATCH",
-                body: user,
+                body: profileData,
             }),
         }),
         deleteUser: builder.mutation({
-            query: (id) => ({
-                url: `/delete/${id}`,
-                method: "DELETE",
+            query: (userId) => ({
+                url: `/user/${userId}`,
+                method: "DELETE",               
             }),
+            invalidatesTags: ["Users"],
         }),
         getUsers: builder.query({
             query: () => ({
                 url: "/users",
                 method: "GET",
+                
             }),
+            refetchOnMount: true,
+            //invalidatesTags: ["Users"],
+            providesTags: ["User"],
+
         }),
         updateUserRole: builder.mutation({
-            query: ({id, role}) => ({
-                url: `/users/${id}`,
+            query: ({userId, role}) => ({
+                url: `/users/${userId}`,
                 method: "PUT",
                 body: {role},
             }),
+            refetchOnMount: true,
+            invalidatesTags: ["User"],
         }),
+        
     }),
 
  
@@ -66,7 +77,7 @@ const authApi = createApi({
 export const {
     useRegisterUserMutation,
     useLoginUserMutation,
-    useLogoutMutation,
+    useLogoutUserMutation,
     useEditProfileMutation,
     useDeleteUserMutation,
     useGetUsersQuery,
