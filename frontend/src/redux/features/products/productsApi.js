@@ -23,10 +23,11 @@ credentials: 'include'
       },
       providesTags: ["Products"]
     }),
-    fetchProductById: (builder) => ({
+    fetchProductById: builder.query({
       query: (id) => `/${id}`,
-      providesTags: (result, error, id) =>[{type: "Products, id"}]
+      providesTags: (result, error, id) => [{ type: "Products", id }]
     }),
+    
     AddProduct: builder.mutation({
       query: (newProduct) => ({
         url: "/create-product",
