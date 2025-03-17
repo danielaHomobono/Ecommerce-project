@@ -57,7 +57,7 @@ router.get('/total-reviews', async (req, res) => {
     }
 });
 //get reviews by userId
-router.get(':userId', async (req, res) => {    
+router.get('/:userId', async (req, res) => {    
         const {userId} = req.params;
         if (!userId) {
             return res.status(400).json({ error: 'User ID is required' });
